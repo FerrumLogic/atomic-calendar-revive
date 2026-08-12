@@ -88,6 +88,8 @@ export default {
 	refreshInterval: 60,
 
 	showEventIcon: false,
+	showCategoryIcon: false,
+	showCategoryBar: false,
 	eventDateFormat: 'ddd D MMM',
 	hideDuplicates: false,
 

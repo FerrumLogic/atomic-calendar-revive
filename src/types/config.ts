@@ -1,4 +1,5 @@
 import { ActionConfig } from './lovelace';
+import { CategoryConfig } from '../helpers/category';
 
 export interface atomicCardConfig {
 	entities?: any;
@@ -43,6 +44,9 @@ export interface atomicCardConfig {
 	refreshInterval: number;
 	showDescription: boolean;
 	showEventIcon: boolean;
+	showCategoryIcon?: boolean;
+	showCategoryBar?: boolean;
+	categoryMap?: Record<string, CategoryConfig>;
 	showEventDate: boolean;
 	showDatePerEvent: boolean;
 	showRelativeTime?: boolean;
