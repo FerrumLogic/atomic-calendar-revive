@@ -28,10 +28,7 @@ export function resolveCategoryMap(map?: Record<string, CategoryConfig>): Record
 	return merged;
 }
 
-export function parseCategoriesFromTitle(
-	title: string,
-	map: Record<string, CategoryConfig>,
-): Category[] {
+export function parseCategoriesFromTitle(title: string, map: Record<string, CategoryConfig>): Category[] {
 	const out: Category[] = [];
 	for (const [marker, cfg] of Object.entries(map)) {
 		if (title.includes(marker)) {
