@@ -142,6 +142,26 @@ export class EventView implements ICalendarView {
 							</div>`
 						: ``;
 
+				//иконка категории события (если включена и у события есть категория)
+				const catIcon =
+					this.config.showCategoryIcon && event.categoryIcon
+						? event.categoryIcon.includes(':')
+							? html`<ha-icon
+									class="event-category-icon"
+									style="color: ${event.categoryColor};"
+									icon="${event.categoryIcon}"
+								></ha-icon>`
+							: html`<span class="event-category-icon emoji" style="color: ${event.categoryColor};"
+									>${event.categoryIcon}</span
+								>`
+						: html``;
+
+				//цветная полоса слева (если включена и у события есть категория)
+				const catBar =
+					this.config.showCategoryBar && event.categoryColor
+						? html`<div class="event-category-bar" style="background: ${event.categoryColor};"></div>`
+						: html``;
+
 				const calColor =
 					typeof event.entityConfig.color != 'undefined' ? event.entityConfig.color : this.config.defaultCalColor;
 
@@ -226,10 +246,10 @@ export class EventView implements ICalendarView {
 							event.entity.entity_id,
 						)}"
 				>
-					${currentEventLine} ${eventLeft}
+					${currentEventLine} ${catBar} ${eventLeft}
 					<div class="event-right" style="${finishedEventsStyle}">
 						<div class="event-right-top">
-							${getTitleHTML(this.config, event, this.hass, 'Event')}
+							${catIcon} ${getTitleHTML(this.config, event, this.hass, 'Event')}
 							<div class="event-location">
 								${getLocationHTML(this.config, event)} ${eventCalName} ${this.config.hoursOnSameLine ? hoursHTML : ''}
 							</div>

@@ -60,6 +60,7 @@ export const styles: CSSResultGroup = css`
 		display: grid;
 		grid-template-columns: 0.5fr 2fr;
 		grid-gap: 10px;
+		position: relative;
 	}
 	.event-left,
 	.event-right {
@@ -184,6 +185,25 @@ export const styles: CSSResultGroup = css`
 		margin-top: -10px;
 		margin-bottom: 0px;
 		grid-column: 1 / -1;
+	}
+
+	.event-category-icon {
+		--mdc-icon-size: 16px;
+		width: 16px;
+		height: 16px;
+		margin-right: 6px;
+	}
+	.event-category-icon.emoji {
+		font-size: 16px;
+		line-height: 16px;
+	}
+	.event-category-bar {
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 4px;
+		border-radius: 2px;
 	}
 
 	progress {
