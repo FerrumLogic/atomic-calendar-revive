@@ -101,11 +101,40 @@ export class CalendarView implements ICalendarView {
 			}
 		});
 		myIcons.sort((a, b) => a.icon.localeCompare(b.icon));
-		return myIcons.map(
+		const icons = myIcons.map(
 			(icon) =>
 				html`<span>
 					<ha-icon icon="${icon.icon}" class="calIcon" style="color: ${icon.color};"></ha-icon>
 				</span>`,
 		);
+
+		// Иконки категорий событий дня (уникальные по key), если включены
+		if (this.config.showCategoryIcon) {
+			const catIcons: { key: string; icon: string; color: string }[] = [];
+			day.allEvents.forEach((event: EventClass) => {
+				event.categories.forEach((cat) => {
+					if (!catIcons.find((c) => c.key === cat.key)) {
+						catIcons.push({ key: cat.key, icon: cat.icon, color: cat.color });
+					}
+				});
+			});
+			catIcons.forEach((cat) => {
+				// MDI-иконки (содержат ':') — через ha-icon, эмодзи — текстом
+				if (cat.icon.includes(':')) {
+					icons.push(
+						html`<span>
+							<ha-icon icon="${cat.icon}" class="calIcon" style="color: ${cat.color};"></ha-icon>
+						</span>`,
+					);
+				} else {
+					icons.push(
+						html`<span class="calIcon" style="color: ${cat.color}; font-size: 16px; line-height: 16px;"
+							>${cat.icon}</span
+						>`,
+					);
+				}
+			});
+		}
+		return icons;
 	}
 }
