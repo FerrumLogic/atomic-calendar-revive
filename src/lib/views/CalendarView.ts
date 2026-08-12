@@ -128,7 +128,10 @@ export class CalendarView implements ICalendarView {
 					);
 				} else {
 					icons.push(
-						html`<span class="calIcon" style="color: ${cat.color}; font-size: 16px; line-height: 16px;"
+						html`<span
+							class="calIcon"
+							aria-hidden="true"
+							style="color: ${cat.color}; font-size: 16px; line-height: 16px;"
 							>${cat.icon}</span
 						>`,
 					);

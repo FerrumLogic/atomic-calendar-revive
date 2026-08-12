@@ -151,7 +151,7 @@ export class EventView implements ICalendarView {
 									style="color: ${event.categoryColor};"
 									icon="${event.categoryIcon}"
 								></ha-icon>`
-							: html`<span class="event-category-icon emoji" style="color: ${event.categoryColor};"
+							: html`<span class="event-category-icon emoji" aria-hidden="true" style="color: ${event.categoryColor};"
 									>${event.categoryIcon}</span
 								>`
 						: html``;

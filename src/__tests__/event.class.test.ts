@@ -200,10 +200,7 @@ describe('EventClass: categories', () => {
 	});
 
 	test('empty categories when no markers', () => {
-		const e = new EventClass(
-			timedEvent('2026-04-25T14:00:00', '2026-04-25T15:00:00', 'Plain'),
-			makeConfig(),
-		);
+		const e = new EventClass(timedEvent('2026-04-25T14:00:00', '2026-04-25T15:00:00', 'Plain'), makeConfig());
 		expect(e.categories).toEqual([]);
 		expect(e.categoryColor).toBeNull();
 		expect(e.categoryIcon).toBeNull();

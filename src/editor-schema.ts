@@ -140,7 +140,6 @@ export const appearanceSchema = [
 export const categorySchema = [
 	{ name: 'showCategoryIcon', label: 'Show category icon', selector: { boolean: {} } },
 	{ name: 'showCategoryBar', label: 'Show category bar', selector: { boolean: {} } },
-	{ name: 'categoryMap', label: 'Category map', selector: { object: {} } },
 ];
 
 export const entitySchema = [

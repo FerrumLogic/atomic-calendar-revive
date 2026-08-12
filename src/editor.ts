@@ -14,6 +14,7 @@ import {
 	mainSchema,
 	plannerSchema,
 } from './editor-schema';
+import { DEFAULT_CATEGORY_MAP } from './helpers/category';
 import { style } from './style-editor';
 import { atomicCardConfig } from './types/config';
 import { HomeAssistant } from './types/homeassistant';
@@ -209,6 +210,7 @@ export class AtomicCalendarReviveEditor extends LitElement implements LovelaceCa
 							.computeLabel=${this._computeLabel}
 							@value-changed=${this._valueChanged}
 						></ha-form>
+						${this.renderCategories()}
 					</div>
 				</ha-expansion-panel>
 
@@ -277,6 +279,30 @@ export class AtomicCalendarReviveEditor extends LitElement implements LovelaceCa
 		`;
 	}
 
+	private renderCategories(): TemplateResult {
+		return html`
+			${Object.entries(DEFAULT_CATEGORY_MAP).map(
+				([key, cfg]) => html`
+					<div class="row" style="gap: 8px;">
+						<span class="secondary" style="font-size: 18px; width: 32px; text-align: center;">${key}</span>
+						<ha-textfield
+							.label=${'Icon'}
+							.value=${this._config.categoryMap?.[key]?.icon ?? cfg.icon}
+							@value-changed=${(ev: CustomEvent) => this._categoryValueChanged(key, 'icon', ev)}
+						></ha-textfield>
+						<ha-selector
+							.hass=${this.hass}
+							.selector=${{ color: {} }}
+							.value=${this._config.categoryMap?.[key]?.color ?? cfg.color}
+							.label=${'Color'}
+							@value-changed=${(ev: CustomEvent) => this._categoryValueChanged(key, 'color', ev)}
+						></ha-selector>
+					</div>
+				`,
+			)}
+		`;
+	}
+
 	private _computeLabel(schema: any) {
 		return schema.label || schema.name;
 	}
@@ -300,6 +326,16 @@ export class AtomicCalendarReviveEditor extends LitElement implements LovelaceCa
 
 	private _actionValueChanged(ev: CustomEvent, action: string): void {
 		this._config = { ...this._config, [action]: ev.detail.value };
+		const config = this._getCleanConfig(this._config);
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		fireEvent(this, 'config-changed', { config });
+	}
+
+	private _categoryValueChanged(key: string, field: 'icon' | 'color', ev: CustomEvent): void {
+		const categoryMap = { ...(this._config.categoryMap ?? {}) };
+		categoryMap[key] = { ...(categoryMap[key] ?? {}), [field]: ev.detail.value };
+		this._config = { ...this._config, categoryMap };
 		const config = this._getCleanConfig(this._config);
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore

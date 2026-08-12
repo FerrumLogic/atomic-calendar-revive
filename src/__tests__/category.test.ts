@@ -1,10 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import {
-	DEFAULT_CATEGORY_MAP,
-	parseCategoriesFromTitle,
-	resolveCategoryMap,
-} from '../helpers/category';
+import { DEFAULT_CATEGORY_MAP, parseCategoriesFromTitle, resolveCategoryMap } from '../helpers/category';
 
 describe('category parsing', () => {
 	test('resolves default map when none provided', () => {
