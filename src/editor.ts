@@ -8,6 +8,7 @@ import defaults from './defaults';
 import {
 	appearanceSchema,
 	calendarSchema,
+	categorySchema,
 	entitySchema,
 	eventSchema,
 	mainSchema,
@@ -192,6 +193,19 @@ export class AtomicCalendarReviveEditor extends LitElement implements LovelaceCa
 							.hass=${this.hass}
 							.data=${this._config}
 							.schema=${appearanceSchema}
+							.computeLabel=${this._computeLabel}
+							@value-changed=${this._valueChanged}
+						></ha-form>
+					</div>
+				</ha-expansion-panel>
+
+				<ha-expansion-panel outlined>
+					<div slot="header" class="title">Categories</div>
+					<div class="values">
+						<ha-form
+							.hass=${this.hass}
+							.data=${this._config}
+							.schema=${categorySchema}
 							.computeLabel=${this._computeLabel}
 							@value-changed=${this._valueChanged}
 						></ha-form>
