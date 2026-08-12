@@ -43,5 +43,6 @@ export function parseCategoriesFromTitle(
 			});
 		}
 	}
-	return out;
+	// первый маркер в заголовке — главная категория (цвет/иконка полосы)
+	return out.sort((a, b) => title.indexOf(a.key) - title.indexOf(b.key));
 }

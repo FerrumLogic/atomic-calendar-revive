@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 
+import { Category, parseCategoriesFromTitle, resolveCategoryMap } from '../helpers/category';
+
 /**
  * Creates an generalized Calendar Event to use when creating the calendar card
  * There can be Google Events and CalDav Events. This class normalizes those
@@ -314,6 +316,19 @@ export default class EventClass {
 
 	get title() {
 		return applyTitleReplace(this.rawTitle, this.entityConfig.titleReplace);
+	}
+
+	get categories(): Category[] {
+		const map = resolveCategoryMap(this.entityConfig.categoryMap ?? this._globalConfig?.categoryMap);
+		return parseCategoriesFromTitle(this.title, map);
+	}
+
+	get categoryColor(): string | null {
+		return this.categories[0]?.color ?? null;
+	}
+
+	get categoryIcon(): string | null {
+		return this.categories[0]?.icon ?? null;
 	}
 
 	get description() {

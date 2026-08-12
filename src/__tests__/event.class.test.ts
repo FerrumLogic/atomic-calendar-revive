@@ -187,3 +187,25 @@ describe('EventClass: titleReplace', () => {
 		expect(applyTitleReplace('Hello', [])).toBe('Hello');
 	});
 });
+
+describe('EventClass: categories', () => {
+	test('detects categories from title markers', () => {
+		const e = new EventClass(
+			timedEvent('2026-04-25T14:00:00', '2026-04-25T15:00:00', '✝️ 🐟 Седмица 12-я'),
+			makeConfig({ categoryMap: { '✝️': { color: '#c62828' }, '🐟': { color: '#1565c0' } } }),
+		);
+		expect(e.categories.map((c) => c.key).sort()).toEqual(['✝️', '🐟']);
+		expect(e.categoryColor).toBe('#c62828'); // первая (главная) категория
+		expect(e.categoryIcon).toBe('✝️');
+	});
+
+	test('empty categories when no markers', () => {
+		const e = new EventClass(
+			timedEvent('2026-04-25T14:00:00', '2026-04-25T15:00:00', 'Plain'),
+			makeConfig(),
+		);
+		expect(e.categories).toEqual([]);
+		expect(e.categoryColor).toBeNull();
+		expect(e.categoryIcon).toBeNull();
+	});
+});
