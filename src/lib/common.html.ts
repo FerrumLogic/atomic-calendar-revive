@@ -159,9 +159,12 @@ export function getTitleHTML(config: atomicCardConfig, event: EventClass, hass: 
 	const textDecoration: string = event.isDeclined ? 'line-through' : 'none';
 	const entityStyle = entityTitleStyle(event.entityConfig);
 	let { title } = event;
+	const displayTitle = event.displayTitle || title;
 
-	if (!isHtml(event.title) && config.titleLength && event.title.length > config.titleLength) {
-		title = event.title.slice(0, config.titleLength) + '...';
+	if (!isHtml(displayTitle) && config.titleLength && displayTitle.length > config.titleLength) {
+		title = displayTitle.slice(0, config.titleLength) + '...';
+	} else {
+		title = displayTitle;
 	}
 	if (config.disableEventLink || event.htmlLink === undefined || event.htmlLink === null) {
 		return html`

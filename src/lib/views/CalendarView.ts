@@ -101,16 +101,10 @@ export class CalendarView implements ICalendarView {
 			}
 		});
 		myIcons.sort((a, b) => a.icon.localeCompare(b.icon));
-		const icons = myIcons.map(
-			(icon) =>
-				html`<span>
-					<ha-icon icon="${icon.icon}" class="calIcon" style="color: ${icon.color};"></ha-icon>
-				</span>`,
-		);
 
-		// Иконки категорий событий дня (уникальные по key), если включены
+		// Иконки категорий событий дня (уникальные по key)
+		const catIcons: { key: string; icon: string; color: string }[] = [];
 		if (this.config.showCategoryIcon) {
-			const catIcons: { key: string; icon: string; color: string }[] = [];
 			day.allEvents.forEach((event: EventClass) => {
 				event.categories.forEach((cat) => {
 					if (!catIcons.find((c) => c.key === cat.key)) {
@@ -118,26 +112,20 @@ export class CalendarView implements ICalendarView {
 					}
 				});
 			});
-			catIcons.forEach((cat) => {
-				// MDI-иконки (содержат ':') — через ha-icon, эмодзи — текстом
-				if (cat.icon.includes(':')) {
-					icons.push(
-						html`<span>
-							<ha-icon icon="${cat.icon}" class="calIcon" style="color: ${cat.color};"></ha-icon>
-						</span>`,
-					);
-				} else {
-					icons.push(
-						html`<span
-							class="calIcon"
-							aria-hidden="true"
-							style="color: ${cat.color}; font-size: 16px; line-height: 16px;"
-							>${cat.icon}</span
-						>`,
-					);
-				}
-			});
 		}
-		return icons;
+
+		// Если есть категории — показываем ТОЛЬКО их (вместо иконок календаря),
+		// иначе — иконки календарей как раньше
+		const iconsToShow = catIcons.length > 0 ? catIcons : myIcons;
+
+		return iconsToShow.map((ic) =>
+			ic.icon.includes(':')
+				? html`<span>
+						<ha-icon icon="${ic.icon}" class="calIcon" style="color: ${ic.color};"></ha-icon>
+					</span>`
+				: html`<span class="calIcon" aria-hidden="true" style="color: ${ic.color}; font-size: 16px; line-height: 16px;"
+						>${ic.icon}</span
+					>`,
+		);
 	}
 }

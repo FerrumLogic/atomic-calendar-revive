@@ -196,7 +196,7 @@ describe('EventClass: categories', () => {
 		);
 		expect(e.categories.map((c) => c.key).sort()).toEqual(['✝️', '🐟']);
 		expect(e.categoryColor).toBe('#c62828'); // первая (главная) категория
-		expect(e.categoryIcon).toBe('✝️');
+		expect(e.categoryIcon).toBe('mdi:cross');
 	});
 
 	test('empty categories when no markers', () => {

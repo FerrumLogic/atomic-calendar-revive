@@ -12,18 +12,22 @@ export interface Category {
 }
 
 export const DEFAULT_CATEGORY_MAP: Record<string, CategoryConfig> = {
-	'🌿': { icon: '🌿', color: '#2e7d32' }, // строгий пост
-	'🐟': { icon: '🐟', color: '#1565c0' }, // рыба
-	'🧀': { icon: '🧀', color: '#f9a825' }, // без мяса
-	'✝️': { icon: '✝️', color: '#c62828' }, // праздник
-	'🕯️': { icon: '🕯️', color: '#5d4037' }, // поминовение
-	'✨': { icon: '✨', color: '#6a1b9a' }, // сплошная седмица
+	'🌿': { icon: 'mdi:leaf', color: '#2e7d32', label: 'Пост' }, // строгий пост
+	'🐟': { icon: 'mdi:fish', color: '#1565c0', label: 'Рыба' }, // рыба
+	'🧀': { icon: 'mdi:cheese', color: '#f9a825', label: 'Без мяса' }, // без мяса
+	'✝️': { icon: 'mdi:cross', color: '#c62828', label: 'Праздник' }, // праздник
+	'🕯️': { icon: 'mdi:candle', color: '#5d4037', label: 'Поминовение' }, // поминовение
+	'✨': { icon: 'mdi:star', color: '#6a1b9a', label: 'Седмица' }, // сплошная седмица
 };
 
 export function resolveCategoryMap(map?: Record<string, CategoryConfig>): Record<string, CategoryConfig> {
 	const merged: Record<string, CategoryConfig> = { ...DEFAULT_CATEGORY_MAP };
 	for (const [marker, cfg] of Object.entries(map ?? {})) {
-		merged[marker] = { ...merged[marker], ...cfg, icon: cfg.icon ?? marker };
+		merged[marker] = {
+			...merged[marker],
+			...cfg,
+			icon: cfg.icon ?? merged[marker]?.icon ?? marker,
+		};
 	}
 	return merged;
 }
@@ -42,4 +46,13 @@ export function parseCategoriesFromTitle(title: string, map: Record<string, Cate
 	}
 	// первый маркер в заголовке — главная категория (цвет/иконка полосы)
 	return out.sort((a, b) => title.indexOf(a.key) - title.indexOf(b.key));
+}
+
+export function stripCategoryMarkers(title: string, map: Record<string, CategoryConfig>): string {
+	let out = title;
+	for (const marker of Object.keys(map)) {
+		out = out.split(marker).join('').trim();
+	}
+	// убрать лишние пробелы после удаления маркеров
+	return out.replace(/\s{2,}/g, ' ').trim();
 }

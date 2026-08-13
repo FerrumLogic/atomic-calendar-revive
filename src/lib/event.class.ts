@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { Category, parseCategoriesFromTitle, resolveCategoryMap } from '../helpers/category';
+import { Category, parseCategoriesFromTitle, resolveCategoryMap, stripCategoryMarkers } from '../helpers/category';
 
 /**
  * Creates an generalized Calendar Event to use when creating the calendar card
@@ -316,6 +316,12 @@ export default class EventClass {
 
 	get title() {
 		return applyTitleReplace(this.rawTitle, this.entityConfig.titleReplace);
+	}
+
+	// Заголовок без эмодзи-маркеров категорий (для отображения)
+	get displayTitle(): string {
+		const map = resolveCategoryMap(this.entityConfig.categoryMap ?? this._globalConfig?.categoryMap);
+		return stripCategoryMarkers(this.title, map);
 	}
 
 	get categories(): Category[] {
