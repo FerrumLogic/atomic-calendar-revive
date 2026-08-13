@@ -337,6 +337,15 @@ export default class EventClass {
 		return this.categories[0]?.icon ?? null;
 	}
 
+	// Per-entity категории: entityConfig приоритетнее глобального конфига карточки
+	get showCategoryIcon(): boolean {
+		return this.entityConfig.showCategoryIcon ?? this._globalConfig?.showCategoryIcon ?? false;
+	}
+
+	get showCategoryBar(): boolean {
+		return this.entityConfig.showCategoryBar ?? this._globalConfig?.showCategoryBar ?? false;
+	}
+
 	get description() {
 		// if Observance is in the description, filter it out
 		const regex = new RegExp('^Observance', 'i');

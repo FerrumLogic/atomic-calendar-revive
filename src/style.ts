@@ -327,6 +327,14 @@ export const styles: CSSResultGroup = css`
 		padding-bottom: 5px;
 	}
 
+	.cal-multiday-bar {
+		position: absolute;
+		left: 1px;
+		right: 1px;
+		height: 3px;
+		opacity: 0.75;
+	}
+
 	/* COMPACT CALENDAR MODE — restores tight v10.0.0 grid sizing when compactMode: true */
 	.month-grid.compact .calTitleContainer {
 		padding: 2px 4px 4px 4px;

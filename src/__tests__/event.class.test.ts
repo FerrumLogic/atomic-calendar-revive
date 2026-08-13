@@ -100,6 +100,21 @@ describe('EventClass.split (mode-agnostic)', () => {
 		const parts = e.split();
 		expect(parts.length).toBeGreaterThan(2);
 	});
+
+	test('partials expose daysLong and first/last flags for the grid bar', () => {
+		const e = new EventClass(
+			timedEvent('2026-08-14T00:00:00', '2026-08-28T00:00:00'),
+			makeConfig({ showMultiDay: true }),
+		);
+		const parts = e.split();
+		expect(parts.length).toBe(14);
+		expect(parts[0].daysLong).toBe(14);
+		expect(parts[0].isFirstDay).toBe(true);
+		expect(parts[0].isLastDay).toBe(false);
+		expect(parts[13].isFirstDay).toBe(false);
+		expect(parts[13].isLastDay).toBe(true);
+		expect(parts[5].daysLong).toBe(14);
+	});
 });
 
 describe('EventClass: title fallback', () => {

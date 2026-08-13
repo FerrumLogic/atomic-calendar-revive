@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 import { TemplateResult, html } from 'lit';
 
+import { selectDayIcons } from '../../helpers/day-icons';
 import { getEntityIcon } from '../../helpers/get-icon';
 import { atomicCardConfig } from '../../types/config';
 import { HomeAssistant } from '../../types/homeassistant';
 import { ICardHost } from '../card-host.interface';
 import { getCalendarDescriptionHTML, getCalendarLocationHTML, getTitleHTML } from '../common.html';
-import EventClass from '../event.class';
 import { ICalendarView } from '../view.interface';
 import { CalendarDay, MonthGrid } from './month-grid';
 
@@ -33,7 +33,10 @@ export class CalendarView implements ICalendarView {
 
 	render(): TemplateResult {
 		return this.grid.render({
-			renderCellBody: (day) => html` <div class="iconDiv">${this.renderDayIcons(day)}</div> `,
+			renderCellBody: (day) => html`
+				${this.renderMultiDayBars(day)}
+				<div class="iconDiv">${this.renderDayIcons(day)}</div>
+			`,
 			onCellClick: (day) => this.selectDay(day),
 			cellHighlightClass: (day) => (dayjs(day.date).isSame(dayjs(this.clickedDate), 'day') ? 'active' : ''),
 			renderAfter: () => html`<div class="summary-div">${this.summaryHtml}</div>`,
@@ -88,35 +91,47 @@ export class CalendarView implements ICalendarView {
 		});
 	}
 
-	private renderDayIcons(day: CalendarDay): TemplateResult[] {
-		const myIcons: { icon: string; color: string }[] = [];
-		day.allEvents.forEach((event: EventClass) => {
-			let { icon } = event.entityConfig;
-			if (!icon || icon.length === 0) {
-				icon = getEntityIcon(event.entity.entity_id, this.hass);
-			}
-			const exists = myIcons.findIndex((x) => x.icon === icon && x.color === event.entityConfig.color);
-			if (exists === -1) {
-				myIcons.push({ icon, color: event.entityConfig.color });
-			}
+	private renderMultiDayBars(day: CalendarDay): TemplateResult[] {
+		const bars: TemplateResult[] = [];
+		let stackIndex = 0;
+
+		day.allEvents.forEach((event) => {
+			// часть multi-day события: разбито (addDays задан) или растянуто в month-grid
+			const isPart = event.daysLong && event.daysLong > 1;
+			if (!isPart) return;
+
+			const color =
+				event.showCategoryIcon && event.categoryColor
+					? event.categoryColor
+					: (event.entityConfig.color ?? this.config.defaultCalColor);
+			const roundedLeft = event.isFirstDay;
+			const roundedRight = event.isLastDay;
+
+			bars.push(html`
+				<div
+					class="cal-multiday-bar"
+					style="background-color: ${color}; top: ${stackIndex * 5}px; ${
+						roundedLeft ? 'border-top-left-radius: 3px; border-bottom-left-radius: 3px;' : ''
+					} ${roundedRight ? 'border-top-right-radius: 3px; border-bottom-right-radius: 3px;' : ''}"
+				></div>
+			`);
+			stackIndex++;
 		});
-		myIcons.sort((a, b) => a.icon.localeCompare(b.icon));
 
-		// Иконки категорий событий дня (уникальные по key)
-		const catIcons: { key: string; icon: string; color: string }[] = [];
-		if (this.config.showCategoryIcon) {
-			day.allEvents.forEach((event: EventClass) => {
-				event.categories.forEach((cat) => {
-					if (!catIcons.find((c) => c.key === cat.key)) {
-						catIcons.push({ key: cat.key, icon: cat.icon, color: cat.color });
-					}
-				});
-			});
-		}
+		return bars;
+	}
 
-		// Если есть категории — показываем ТОЛЬКО их (вместо иконок календаря),
-		// иначе — иконки календарей как раньше
-		const iconsToShow = catIcons.length > 0 ? catIcons : myIcons;
+	private renderDayIcons(day: CalendarDay): TemplateResult[] {
+		const iconsToShow = selectDayIcons(
+			day.allEvents.map((event) => ({
+				icon: event.entityConfig.icon,
+				color: event.entityConfig.color,
+				showCategoryIcon: event.showCategoryIcon,
+				categories: event.categories,
+				entity_id: event.entity.entity_id,
+			})),
+			(event) => getEntityIcon(event.entity_id ?? '', this.hass),
+		);
 
 		return iconsToShow.map((ic) =>
 			ic.icon.includes(':')

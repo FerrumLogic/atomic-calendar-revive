@@ -9,6 +9,19 @@ export const style = css`
 		display: flex;
 		pointer-events: none;
 	}
+	.row ha-textfield {
+		flex: 1;
+		min-width: 0;
+	}
+	.row ha-selector {
+		flex: 1;
+		min-width: 0;
+	}
+	.row ha-form {
+		flex: 1;
+		min-width: 0;
+		pointer-events: auto;
+	}
 	.title {
 		padding-left: 16px;
 		margin-top: -6px;

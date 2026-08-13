@@ -157,6 +157,8 @@ export const entitySchema = [
 	{ name: 'showMultiDay', label: 'Show Multi Day', selector: { boolean: {} } },
 	{ name: 'showDescription', label: 'Show Description', selector: { boolean: {} } },
 	{ name: 'showHours', label: 'Show Hours', selector: { boolean: {} } },
+	{ name: 'showCategoryIcon', label: 'Show category icon', selector: { boolean: {} } },
+	{ name: 'showCategoryBar', label: 'Show category bar', selector: { boolean: {} } },
 	{ name: 'fontSize', label: 'Font Size (e.g. 120%, 14px)', selector: { text: {} } },
 	{ name: 'fontWeight', label: 'Font Weight (e.g. bold, 700)', selector: { text: {} } },
 	{ name: 'tap_action', label: 'Tap Action', selector: { 'ui-action': {} } },

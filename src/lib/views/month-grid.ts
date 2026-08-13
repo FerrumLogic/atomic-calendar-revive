@@ -84,6 +84,15 @@ export class MonthGrid {
 				for (const event of events) {
 					if (event.startDateTime.isSame(day.date, 'day')) {
 						day.allEvents.push(event);
+					} else if (
+						// не разбитое multi-day событие (showMultiDay выкл) —
+						// распространяем на все дни диапазона, чтобы рисовать бар
+						event.isMultiDay &&
+						event.addDays === false &&
+						event.startDateTime.isBefore(day.date) &&
+						event.endDateTime.isAfter(day.date)
+					) {
+						day.allEvents.push(event);
 					}
 				}
 			}

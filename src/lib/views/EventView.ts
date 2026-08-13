@@ -144,7 +144,7 @@ export class EventView implements ICalendarView {
 
 				//иконка категории события (если включена и у события есть категория)
 				const catIcon =
-					this.config.showCategoryIcon && event.categoryIcon
+					event.showCategoryIcon && event.categoryIcon
 						? event.categoryIcon.includes(':')
 							? html`<ha-icon
 									class="event-category-icon"
@@ -158,7 +158,7 @@ export class EventView implements ICalendarView {
 
 				//цветная полоса слева (если включена и у события есть категория)
 				const catBar =
-					this.config.showCategoryBar && event.categoryColor
+					event.showCategoryBar && event.categoryColor
 						? html`<div class="event-category-bar" style="background: ${event.categoryColor};"></div>`
 						: html``;
 
